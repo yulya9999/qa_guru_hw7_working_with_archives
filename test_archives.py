@@ -17,7 +17,7 @@ def test_read_file_pdf():
 
 
 def test_archive_xlsx():
-    with ZipFile(os.path.join(RESOURCES_DIR, "files.zip"), "r") as zip_file:
+    with (zipfile.ZipFile(os.path.join(RESOURCES_DIR, 'files.zip')) as zip_file):
         with zip_file.open("test.xlsx") as xlsx_file:
             workbook = load_workbook(xlsx_file)
             sheet = workbook.active
@@ -26,7 +26,7 @@ def test_archive_xlsx():
 
 
 def test_archive_csv():
-    with ZipFile(os.path.join(RESOURCES_DIR, "files.zip"), "r") as zip_file:
+    with (zipfile.ZipFile(os.path.join(RESOURCES_DIR, 'files.zip')) as zip_file):
         with zip_file.open("test.csv") as csv_file:
             csvreader = list(csv.reader(TextIOWrapper(csv_file, "Windows-1251"), delimiter=';'))
             second_row = csvreader[1]
