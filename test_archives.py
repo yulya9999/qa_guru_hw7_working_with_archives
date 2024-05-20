@@ -1,28 +1,12 @@
 import os
 from zipfile import ZipFile
 from pypdf import PdfReader
-from openpyxl import load_workbook, Workbook
+from openpyxl import load_workbook
 import csv
 from io import TextIOWrapper
-
-CURRENT_FILE = os.path.abspath(__file__)
-CURRENT_DIRECTORY = os.path.dirname(CURRENT_FILE)
-TMP_DIR = os.path.join(CURRENT_DIRECTORY, "tmp")
-PDF_DIR = os.path.join(TMP_DIR, "test.pdf")
-XLSX_DIR = os.path.join(TMP_DIR, "test.xlsx")
-CSV_DIR = os.path.join(TMP_DIR, "test.csv")
-
-if not os.path.exists("resources"):
-    os.mkdir("resources")
+from conftest import CURRENT_DIRECTORY
 
 RESOURCES_DIR = os.path.join(CURRENT_DIRECTORY, "resources")
-
-
-def test_archive():
-    with ZipFile(os.path.join(RESOURCES_DIR, "files.zip"), "w") as zf:
-        zf.write(PDF_DIR, os.path.basename(PDF_DIR))
-        zf.write(XLSX_DIR, os.path.basename(XLSX_DIR))
-        zf.write(CSV_DIR, os.path.basename(CSV_DIR))
 
 
 def test_archive_pdf():
@@ -44,10 +28,10 @@ def test_archive_xlsx():
 def test_archive_csv():
     with ZipFile(os.path.join(RESOURCES_DIR, "files.zip"), "r") as zip_file:
         with zip_file.open("test.csv") as csv_file:
-            csvreader = list(csv.reader(TextIOWrapper(csv_file, "Windows-1251")))
+            csvreader = list(csv.reader(TextIOWrapper(csv_file, "Windows-1251"), delimiter=';'))
             # print(list(csvreader))
             second_row = csvreader[1]
             # print(second_row)
 
             assert "Произв. оборуд. в нормочасах" in second_row[0]
-            # assert second_row[3] == "1"
+            assert second_row[3] == "1"
